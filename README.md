@@ -1,6 +1,6 @@
 # ac-go
 
-"ac" of ac-go stands for "Abstract class".It works just like others language's **abstract class**, but empowered by go's **code generator power**!!! Which people seems to not use that much code generator, which for me it's like the alternative option of macro provided by go.
+"ac" of ac-go stands for "Abstract class".It works just like others language's **abstract class**, but empowered by go's **code generator power**!!! Which people seems to not use that much.Code generator for me, it's like the alternative option of macro provided by go.
 
 ## Example project
 
