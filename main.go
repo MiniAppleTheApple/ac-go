@@ -2,69 +2,33 @@ package main
 
 import (
 	"flag"
+	"go/parser"
+	"go/token"
 	"log"
-	"os"
-	"strings"
-	"text/template"
+	"github.com/davecgh/go-spew/spew"
 )
-
-
-type TemplateData struct {
-	Content string
-	Type string
-}
 
 func main() {
 	var (
 		typeName string
-		contentFilePath string
-		templatePath string	
+		subtypeName string
+		fileName string
+		out string = ""
 	)
 
 	flag.StringVar(&typeName, "type", "", "Name of the type you wanna generate")
-	flag.StringVar(&templatePath, "template", "", "Path of the template")
-	flag.StringVar(&contentFilePath, "file", "", "Path of the file")
+	flag.StringVar(&fileName, "filename", "", "Name of the file that contains the type you are saying")
+	flag.StringVar(&subtypeName, "subtype", "", "Name of the subtype you wanna generate")
+	flag.StringVar(&out, "out", "", "Name of the subtype you wanna generate")
 
 	flag.Parse()
 
-	buf, err := os.ReadFile(templatePath)
-	if err != nil {
-		log.Fatal(err)	
-	}
+	fileSet := token.NewFileSet()
+	file, err := parser.ParseFile(fileSet, fileName, nil, parser.AllErrors)	
 
-	contentBuf, err := os.ReadFile(contentFilePath)
-	if err != nil {
-		log.Fatal(err)	
-	}
-
-	content := string(contentBuf)
-	
-	builder := strings.Builder{}
-
-	templateContent := string(buf)
-	templateData := TemplateData {
-		Content: string(content),
-		Type: typeName,
-	}
-
-	template, err := template.New("template").Parse(templateContent)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	err = template.Execute(&builder, templateData)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	mode, err := os.Lstat(contentFilePath)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	err = os.WriteFile(contentFilePath, []byte(builder.String()), mode.Mode().Perm())
-	if err != nil {
-		log.Fatal(err)
-	}
-
+	spew.Dump(file.Decls)
 }
